@@ -1,7 +1,30 @@
 version: '3'
 services:
-  postgres:
+  postgres-rw:
     image: postgres
-    container_name: postgres
+    restart: always
+    volumes:
+      - ./init_rw.sql:/docker-entrypoint-initdb.d/init_rw.sql
+    container_name: postgres-rw
     environment:
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: app
+    ports:
+      - 5432:5432
+  postgres-ro:
+    image: postgres
+    restart: always
+    volumes:
+      - ./init_ro.sql:/docker-entrypoint-initdb.d/init_ro.sql
+    container_name: postgres-ro
+    depends_on:
+      - postgres-rw
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: app
+      POSTGRES_MASTER_HOST: postgres-rw
+      POSTGRES_MASTER_PORT: 5432
+    ports:
+      - 5433:5432

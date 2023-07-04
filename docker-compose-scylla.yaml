@@ -1,0 +1,15 @@
+version: '3'
+services:
+  scylla-0:
+    image: scylladb/scylla
+    container_name: scylla-0
+  
+  scylla-1:
+    image: scylladb/scylla
+    container_name: scylla-1
+    command: --seeds=scylla-0
+  
+  scylla-2:
+    image: scylladb/scylla
+    container_name: scylla-2
+    command: --seeds=scylla-0
